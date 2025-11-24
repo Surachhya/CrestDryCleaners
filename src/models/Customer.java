@@ -1,19 +1,20 @@
 package models;
 
 public class Customer {
+
     private int customerId;
-    private String fName;
-    private String lName;
+    private String firstName;
+    private String lastName;
     private String phone;
     private String email;
     private String address;
     private String paymentInfo;
 
-    // Constructor
-    public Customer(int customerId, String fName, String lName, String phone, String email, String address, String paymentInfo) {
+    public Customer(int customerId, String firstName, String lastName,
+                    String phone, String email, String address, String paymentInfo) {
         this.customerId = customerId;
-        this.fName = fName;
-        this.lName = lName;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.phone = phone;
         this.email = email;
         this.address = address;
@@ -22,12 +23,10 @@ public class Customer {
 
     // Getters
     public int getCustomerId() { return customerId; }
-    public String getFName() { return fName; }
-    public String getLName() { return lName; }
+    public String getFirstName() { return firstName; }
+    public String getLastName() { return lastName; }
     public String getPhone() { return phone; }
     public String getEmail() { return email; }
     public String getAddress() { return address; }
     public String getPaymentInfo() { return paymentInfo; }
-
-    // Setters if needed
 }
