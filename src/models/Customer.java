@@ -29,4 +29,12 @@ public class Customer {
     public String getEmail() { return email; }
     public String getAddress() { return address; }
     public String getPaymentInfo() { return paymentInfo; }
+
+    // Setters
+    public void setFirstName(String firstName) { this.firstName = firstName; }
+    public void setLastName(String lastName) { this.lastName = lastName; }
+    public void setPhone(String phone) { this.phone = phone; }
+    public void setEmail(String email) { this.email = email; }
+    public void setAddress(String address) { this.address = address; }
+    public void setPaymentInfo(String paymentInfo) { this.paymentInfo = paymentInfo; }
 }
