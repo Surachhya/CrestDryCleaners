@@ -79,7 +79,7 @@ public class CustomerListPanel extends JPanel {
         if (row >= 0) {
             int id = (int) table.getValueAt(row, 0);
             Customer c = service.getCustomerById(id);
-            AddCustomerDialog dialog = new AddCustomerDialog(parent, "Update Customer");
+            AddCustomerDialog dialog = new EditCustomerDialog(parent, c);
             dialog.setCustomerData(c);
             dialog.setVisible(true);
             loadData();

@@ -2,6 +2,9 @@ package app;
 
 import ui.MenuPanel;
 import ui.CustomerListPanel;
+import ui.employee.EmployeeListPanel;
+import ui.employee.EmployeeEditPanel;
+import models.Employee;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,7 +26,13 @@ public class MainFrame extends JFrame {
         add(menuPanel, BorderLayout.WEST);
         add(contentPanel, BorderLayout.CENTER);
 
+        // ---------------- EXISTING BUTTONS ----------------
         menuPanel.btnCustomers.addActionListener(e -> showCustomers());
+
+        // ---------------- NEW BUTTON FOR EMPLOYEES ----------------
+        if (menuPanel.btnEmployees != null) {
+            menuPanel.btnEmployees.addActionListener(e -> showEmployees());
+        }
 
         setVisible(true);
     }
@@ -31,6 +40,14 @@ public class MainFrame extends JFrame {
     private void showCustomers() {
         contentPanel.removeAll();
         contentPanel.add(new CustomerListPanel(), BorderLayout.CENTER);
+        contentPanel.revalidate();
+        contentPanel.repaint();
+    }
+
+    private void showEmployees() {
+        contentPanel.removeAll();
+        EmployeeListPanel empPanel = new EmployeeListPanel();
+        contentPanel.add(empPanel, BorderLayout.CENTER);
         contentPanel.revalidate();
         contentPanel.repaint();
     }
