@@ -5,6 +5,7 @@ import ui.CustomerListPanel;
 import ui.employee.EmployeeListPanel;
 import ui.employee.EmployeeEditPanel;
 import models.Employee;
+import ui.store.StoreListPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,13 +27,12 @@ public class MainFrame extends JFrame {
         add(menuPanel, BorderLayout.WEST);
         add(contentPanel, BorderLayout.CENTER);
 
-        // ---------------- EXISTING BUTTONS ----------------
         menuPanel.btnCustomers.addActionListener(e -> showCustomers());
 
-        // ---------------- NEW BUTTON FOR EMPLOYEES ----------------
         if (menuPanel.btnEmployees != null) {
             menuPanel.btnEmployees.addActionListener(e -> showEmployees());
         }
+        menuPanel.btnStores.addActionListener(e -> showStores());
 
         setVisible(true);
     }
@@ -48,6 +48,12 @@ public class MainFrame extends JFrame {
         contentPanel.removeAll();
         EmployeeListPanel empPanel = new EmployeeListPanel();
         contentPanel.add(empPanel, BorderLayout.CENTER);
+        contentPanel.revalidate();
+        contentPanel.repaint();
+    }
+    private void showStores() {
+        contentPanel.removeAll();
+        contentPanel.add(new StoreListPanel(), BorderLayout.CENTER);
         contentPanel.revalidate();
         contentPanel.repaint();
     }

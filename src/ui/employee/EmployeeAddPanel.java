@@ -1,13 +1,12 @@
 package ui.employee;
 
 import models.Employee;
-import services.EmployeeService;
-//import services.StoreService;
 import models.Store;
+import services.EmployeeService;
+import services.StoreService;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
 
 public class EmployeeAddPanel extends JDialog {
 
@@ -20,12 +19,12 @@ public class EmployeeAddPanel extends JDialog {
     private JButton btnCancel;
 
     private EmployeeService employeeService;
-    //private StoreService storeService;
+    private StoreService storeService;
 
     public EmployeeAddPanel(JFrame parent) {
         super(parent, "Add Employee", true);
         employeeService = new EmployeeService();
-      //  storeService = new StoreService();
+        storeService = new StoreService();
 
         initUI();
         pack();
@@ -35,7 +34,6 @@ public class EmployeeAddPanel extends JDialog {
     private void initUI() {
         setLayout(new BorderLayout());
 
-        // ---------- FORM PANEL ----------
         JPanel formPanel = new JPanel(new GridLayout(4, 2, 10, 10));
         formPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
@@ -52,7 +50,6 @@ public class EmployeeAddPanel extends JDialog {
 
         formPanel.add(new JLabel("Store:"));
         comboStore = new JComboBox<>();
-        loadStores();
         formPanel.add(comboStore);
 
         formPanel.add(new JLabel("Phone:"));
@@ -61,61 +58,50 @@ public class EmployeeAddPanel extends JDialog {
 
         add(formPanel, BorderLayout.CENTER);
 
-        // ---------- BUTTONS ----------
         JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         btnSave = new JButton("Save");
         btnCancel = new JButton("Cancel");
         btnPanel.add(btnSave);
         btnPanel.add(btnCancel);
-
         add(btnPanel, BorderLayout.SOUTH);
 
-        // ---------- ACTIONS ----------
-        btnCancel.addActionListener(e -> dispose());
+        loadStores();
 
+        btnCancel.addActionListener(e -> dispose());
         btnSave.addActionListener(e -> saveEmployee());
     }
 
     private void loadStores() {
         comboStore.removeAllItems();
-//        List<Store> stores = storeService.getAllStores();
-//        comboStore.addItem(null); // optional: allow no store
-//        for (Store s : stores) {
-//            comboStore.addItem(s);
-//        }
-        // Temporary static list of stores for testing
-        comboStore.addItem(null); // optional "no store"
-        comboStore.addItem(new Store(1, "Downtown", null, null));
-        comboStore.addItem(new Store(2, "Uptown", null, null));
-        comboStore.addItem(new Store(3, "Airport", null, null));
+        comboStore.addItem(null);
+        for (Store s : storeService.getAllStores()) {
+            comboStore.addItem(s);
+        }
     }
 
     private void saveEmployee() {
         String name = txtName.getText().trim();
         String role = (String) comboRole.getSelectedItem();
-        Store selectedStore = (Store) comboStore.getSelectedItem();
-        Integer storeId = selectedStore != null ? selectedStore.getStoreId() : null;
+        Store store = (Store) comboStore.getSelectedItem();
         String phone = txtPhone.getText().trim();
 
-        if (name.isEmpty() || role == null) {
-            JOptionPane.showMessageDialog(this, "Name and Role are required.");
+        if (name.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Name is required!");
             return;
         }
 
         Employee e = new Employee();
         e.setName(name);
         e.setRole(role);
-        e.setStoreId(storeId);
+        e.setStoreId(store != null ? store.getStoreId() : null);
         e.setPhone(phone);
 
         boolean success = employeeService.addEmployee(e);
-
         if (success) {
             JOptionPane.showMessageDialog(this, "Employee added successfully!");
-            dispose(); // close dialog
+            dispose();
         } else {
             JOptionPane.showMessageDialog(this, "Error adding employee!");
         }
     }
-
 }

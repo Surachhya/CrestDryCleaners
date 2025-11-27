@@ -3,6 +3,7 @@ package ui.employee;
 import models.Employee;
 import models.Store;
 import services.EmployeeService;
+import services.StoreService;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,7 +12,6 @@ public class EmployeeEditPanel extends JDialog {
 
     private JTextField txtName;
     private JComboBox<String> comboRole;
-    private JTextField txtStoreId; // temporary until StoreService ready
     private JComboBox<Store> comboStore;
     private JTextField txtPhone;
 
@@ -19,12 +19,15 @@ public class EmployeeEditPanel extends JDialog {
     private JButton btnCancel;
 
     private EmployeeService employeeService;
-    private Employee employee; // the employee being edited
+    private StoreService storeService;
+    private Employee employee;
 
     public EmployeeEditPanel(JFrame parent, Employee employee) {
         super(parent, "Edit Employee", true);
         this.employee = employee;
+
         employeeService = new EmployeeService();
+        storeService = new StoreService();
 
         initUI();
         pack();
@@ -34,7 +37,6 @@ public class EmployeeEditPanel extends JDialog {
     private void initUI() {
         setLayout(new BorderLayout());
 
-        // ---------- FORM PANEL ----------
         JPanel formPanel = new JPanel(new GridLayout(4, 2, 10, 10));
         formPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
@@ -50,18 +52,26 @@ public class EmployeeEditPanel extends JDialog {
         comboRole.setSelectedItem(employee.getRole());
         formPanel.add(comboRole);
 
-        formPanel.add(new JLabel("Store ID:"));
-        txtStoreId = new JTextField(employee.getStoreId() != null ? employee.getStoreId().toString() : "");
-        formPanel.add(txtStoreId);
+        formPanel.add(new JLabel("Store:"));
+        comboStore = new JComboBox<>();
+        formPanel.add(comboStore);
 
         formPanel.add(new JLabel("Phone:"));
         txtPhone = new JTextField(employee.getPhone());
         formPanel.add(txtPhone);
 
         add(formPanel, BorderLayout.CENTER);
-        formPanel.add(new JLabel("Store:"));
-        comboStore = new JComboBox<>();
+
+        JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        btnSave = new JButton("Save");
+        btnCancel = new JButton("Cancel");
+        btnPanel.add(btnSave);
+        btnPanel.add(btnCancel);
+        add(btnPanel, BorderLayout.SOUTH);
+
         loadStores();
+
+        // Preselect current store
         if (employee.getStoreId() != null) {
             for (int i = 0; i < comboStore.getItemCount(); i++) {
                 Store s = comboStore.getItemAt(i);
@@ -71,62 +81,36 @@ public class EmployeeEditPanel extends JDialog {
                 }
             }
         }
-        formPanel.add(comboStore);
 
-
-        // ---------- BUTTON PANEL ----------
-        JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        btnSave = new JButton("Save");
-        btnCancel = new JButton("Cancel");
-        btnPanel.add(btnSave);
-        btnPanel.add(btnCancel);
-
-        add(btnPanel, BorderLayout.SOUTH);
-
-        // ---------- ACTIONS ----------
         btnCancel.addActionListener(e -> dispose());
         btnSave.addActionListener(e -> updateEmployee());
     }
+
     private void loadStores() {
         comboStore.removeAllItems();
         comboStore.addItem(null);
-        comboStore.addItem(new Store(1, "Downtown", null, null));
-        comboStore.addItem(new Store(2, "Uptown", null, null));
-        comboStore.addItem(new Store(3, "Airport", null, null));
+        for (Store s : storeService.getAllStores()) {
+            comboStore.addItem(s);
+        }
     }
 
     private void updateEmployee() {
-        Store selectedStore = (Store) comboStore.getSelectedItem();
-        Integer storeId = selectedStore != null ? selectedStore.getStoreId() : null;
-        employee.setStoreId(storeId);
-
         String name = txtName.getText().trim();
         String role = (String) comboRole.getSelectedItem();
-        String storeText = txtStoreId.getText().trim();
-
-        if (!storeText.isEmpty()) {
-            try {
-                storeId = Integer.parseInt(storeText);
-            } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(this, "Store ID must be a number");
-                return;
-            }
-        }
-
+        Store store = (Store) comboStore.getSelectedItem();
         String phone = txtPhone.getText().trim();
 
-        if (name.isEmpty() || role == null) {
-            JOptionPane.showMessageDialog(this, "Name and Role are required.");
+        if (name.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Name is required!");
             return;
         }
 
         employee.setName(name);
         employee.setRole(role);
-        employee.setStoreId(storeId);
+        employee.setStoreId(store != null ? store.getStoreId() : null);
         employee.setPhone(phone);
 
         boolean success = employeeService.updateEmployee(employee);
-
         if (success) {
             JOptionPane.showMessageDialog(this, "Employee updated successfully!");
             dispose();

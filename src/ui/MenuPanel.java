@@ -7,6 +7,8 @@ public class MenuPanel extends JPanel {
 
     public JButton btnCustomers;
     public JButton btnEmployees;
+    public JButton btnStores = new JButton("Stores");
+
 
     public MenuPanel() {
         setLayout(new GridLayout(10, 1));
@@ -16,5 +18,6 @@ public class MenuPanel extends JPanel {
         add(btnCustomers);
         btnEmployees = new JButton("Employees");
         add(btnEmployees);
+        add(btnStores);
     }
 }

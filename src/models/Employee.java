@@ -32,4 +32,9 @@ public class Employee {
 
     public String getPhone() { return phone; }
     public void setPhone(String phone) { this.phone = phone; }
+
+    @Override
+    public String toString() {
+        return name + " (ID: " + employeeId + ")";
+    }
 }
