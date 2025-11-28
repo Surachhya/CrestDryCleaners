@@ -36,7 +36,7 @@ public String getColor() {return color;}
 
 //Setters
 public void setMaterial(String material) {this.material = material;}
-public void stPattern(String pattern) {this.pattern = pattern;}
+public void setPattern(String pattern) {this.pattern = pattern;}
 public void setSpecialRequest(String specialRequest) {this.specialRequest = specialRequest;}
 public void setBarcode(int barcode) {this.barcode = barcode;}
 public void setType(String type) {this.type = type;}
