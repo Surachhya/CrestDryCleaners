@@ -37,4 +37,15 @@ public class Customer {
     public void setEmail(String email) { this.email = email; }
     public void setAddress(String address) { this.address = address; }
     public void setPaymentInfo(String paymentInfo) { this.paymentInfo = paymentInfo; }
+
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
+
+    @Override
+    public String toString() {
+        return firstName + " " + lastName + " (" + phone + ")";
+    }
+
+
 }
