@@ -17,10 +17,13 @@ public class StoreListPanel extends JPanel {
     private JButton btnEdit;
     private JButton btnDelete;
     private JButton btnRefresh;
+    private JFrame parent;
 
     private StoreService storeService;
 
-    public StoreListPanel() {
+    public StoreListPanel(JFrame parent)
+    {
+        this.parent = parent;
         this.storeService = new StoreService();
         initUI();
         loadStores();
@@ -60,7 +63,7 @@ public class StoreListPanel extends JPanel {
                         Store store = storeService.getStoreById(storeId);
                         if (store != null) {
                             EditStoreDialog editDialog = new EditStoreDialog(
-                                    (JFrame) SwingUtilities.getWindowAncestor(StoreListPanel.this),
+                                    (JFrame) SwingUtilities.getWindowAncestor(parent),
                                     store
                             );
                             editDialog.setVisible(true);
@@ -96,7 +99,7 @@ public class StoreListPanel extends JPanel {
 
         btnAdd.addActionListener(e -> {
             AddStoreDialog addDialog = new AddStoreDialog(
-                    (JFrame) SwingUtilities.getWindowAncestor(StoreListPanel.this)
+                    (JFrame) SwingUtilities.getWindowAncestor(parent)
             );
             addDialog.setVisible(true);
             loadStores();
@@ -112,7 +115,7 @@ public class StoreListPanel extends JPanel {
             Store store = storeService.getStoreById(storeId);
             if (store != null) {
                 EditStoreDialog editDialog = new EditStoreDialog(
-                        (JFrame) SwingUtilities.getWindowAncestor(StoreListPanel.this),
+                        (JFrame) SwingUtilities.getWindowAncestor(parent),
                         store
                 );
                 editDialog.setVisible(true);

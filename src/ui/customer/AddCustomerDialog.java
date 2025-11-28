@@ -1,4 +1,4 @@
-package ui;
+package ui.customer;
 
 import models.Customer;
 import services.CustomerService;

@@ -1,11 +1,13 @@
 package app;
 
 import ui.MenuPanel;
-import ui.CustomerListPanel;
+import ui.corporateclient.CorporateClientListPanel;
+import ui.customer.CustomerListPanel;
 import ui.employee.EmployeeListPanel;
-import ui.employee.EmployeeEditPanel;
-import models.Employee;
+import ui.item.ItemListPanel;
+import ui.order.OrderListPanel;
 import ui.store.StoreListPanel;
+import ui.van.VanListPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,6 +35,11 @@ public class MainFrame extends JFrame {
             menuPanel.btnEmployees.addActionListener(e -> showEmployees());
         }
         menuPanel.btnStores.addActionListener(e -> showStores());
+        menuPanel.btnOrders.addActionListener(e -> showOrders());
+        menuPanel.btnCorporateClients.addActionListener(e -> showCorporateClient());
+        menuPanel.btnVans.addActionListener(e -> showVans());
+        menuPanel.btnItems.addActionListener(e -> showItems());
+
 
         setVisible(true);
     }
@@ -53,8 +60,37 @@ public class MainFrame extends JFrame {
     }
     private void showStores() {
         contentPanel.removeAll();
-        contentPanel.add(new StoreListPanel(), BorderLayout.CENTER);
+        contentPanel.add(new StoreListPanel(this), BorderLayout.CENTER);
         contentPanel.revalidate();
         contentPanel.repaint();
     }
+
+    private void showOrders() {
+        contentPanel.removeAll();
+        contentPanel.add(new OrderListPanel(), BorderLayout.CENTER);
+        contentPanel.revalidate();
+        contentPanel.repaint();
+    }
+
+    private void showCorporateClient() {
+        contentPanel.removeAll();
+        contentPanel.add(new CorporateClientListPanel(this), BorderLayout.CENTER);
+        contentPanel.revalidate();
+        contentPanel.repaint();
+    }
+
+    private void showVans() {
+        contentPanel.removeAll();
+        contentPanel.add(new VanListPanel(this), BorderLayout.CENTER);
+        contentPanel.revalidate();
+        contentPanel.repaint();
+    }
+
+    private void showItems() {
+        contentPanel.removeAll();
+        contentPanel.add(new ItemListPanel(this), BorderLayout.CENTER);
+        contentPanel.revalidate();
+        contentPanel.repaint();
+    }
+
 }

@@ -1,10 +1,8 @@
-package ui;
+package ui.customer;
 
 import models.Customer;
-import services.CustomerService;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class EditCustomerDialog extends AddCustomerDialog {
