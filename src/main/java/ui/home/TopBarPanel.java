@@ -15,31 +15,44 @@ public class TopBarPanel extends JPanel {
 
         setLayout(new BorderLayout());
         setBackground(new Color(245, 245, 245));
-        setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+        setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15));
 
         // ==========================================================
-        // LEFT: LOGO
+        // LEFT: LOGO WRAPPER WITH ROUNDED BACKGROUND
         // ==========================================================
-        JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 1, 1));
+        JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
         leftPanel.setOpaque(false);
 
-        JLabel lblLogo = new JLabel();
-
+        // Load and scale icon
         ImageIcon icon = new ImageIcon(getClass().getResource("/clothes.png"));
-        Image scaledImg = icon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
-        lblLogo.setIcon(new ImageIcon(scaledImg));
+        Image scaledImg = icon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+        JLabel lblLogo = new JLabel(new ImageIcon(scaledImg));
 
+        // Rounded badge container around logo
+        JPanel logoPanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2 = (Graphics2D) g;
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        leftPanel.add(lblLogo);
+                g2.setColor(new Color(245, 245, 245)); // same as background
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
+            }
+        };
+        logoPanel.setOpaque(false);
+        logoPanel.setLayout(new BorderLayout());
+        logoPanel.add(lblLogo, BorderLayout.CENTER);
+        logoPanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
 
-
+        leftPanel.add(logoPanel);
         add(leftPanel, BorderLayout.WEST);
 
 
         // ==========================================================
-        // CENTER: BUTTONS (Centered horizontally)
+        // CENTER: BUTTONS (Perfectly Centered)
         // ==========================================================
-        JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 5));
+        JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 10));
         centerPanel.setOpaque(false);
 
         btnHome = createButton("Home");
@@ -47,11 +60,13 @@ public class TopBarPanel extends JPanel {
         centerPanel.add(btnHome);
 
         btnReports = createButton("Reports");
-        btnReports.addActionListener(e -> JOptionPane.showMessageDialog(this, "Reports feature coming soon!"));
+        btnReports.addActionListener(e ->
+                JOptionPane.showMessageDialog(this, "Reports feature coming soon!"));
         centerPanel.add(btnReports);
 
         btnSettings = createButton("Settings");
-        btnSettings.addActionListener(e -> JOptionPane.showMessageDialog(this, "Settings feature coming soon!"));
+        btnSettings.addActionListener(e ->
+                JOptionPane.showMessageDialog(this, "Settings feature coming soon!"));
         centerPanel.add(btnSettings);
 
         add(centerPanel, BorderLayout.CENTER);
@@ -60,13 +75,14 @@ public class TopBarPanel extends JPanel {
         // ==========================================================
         // RIGHT: USER LABEL
         // ==========================================================
-        JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 5));
+        JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 5));
         rightPanel.setOpaque(false);
 
-        lblUser = new JLabel("Admin");
+        lblUser = new JLabel("Hello Admin !");
         lblUser.setFont(new Font("Arial", Font.PLAIN, 14));
-        rightPanel.add(lblUser);
+        lblUser.setForeground(new Color(60, 60, 60));
 
+        rightPanel.add(lblUser);
         add(rightPanel, BorderLayout.EAST);
     }
 
