@@ -1,5 +1,7 @@
 package app;
 
+import ui.home.MainFrame;
+
 import javax.swing.*;
 
 public class Main {
