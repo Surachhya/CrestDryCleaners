@@ -30,9 +30,13 @@ public class AddItemDialog extends JDialog {
         service = new ItemService();
         orderService = new OrderService();
 
-        setSize(400, 500);
+        setSize(300, 400);
         setLocationRelativeTo(parent);
-        setLayout(new GridLayout(9, 2, 5, 5));
+
+        // Main container with padding
+        JPanel form = new JPanel();
+        form.setLayout(new BoxLayout(form, BoxLayout.Y_AXIS));
+        form.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         cbOrder = new JComboBox<>();
         tfType = new JTextField();
@@ -44,30 +48,28 @@ public class AddItemDialog extends JDialog {
         tfBarcode = new JTextField();
         btnAdd = new JButton("Add");
 
-        // Load orders into dropdown
-        List<Order> orders = orderService.getAllOrders();
-        for (Order o : orders) {
-            cbOrder.addItem(o); // make sure Order.toString() shows Order ID + Customer Name
+        // Load orders
+        for (Order o : orderService.getAllOrders()) {
+            cbOrder.addItem(o);
         }
 
-        add(new JLabel("Order:"));
-        add(cbOrder);
-        add(new JLabel("Type:"));
-        add(tfType);
-        add(new JLabel("Brand:"));
-        add(tfBrand);
-        add(new JLabel("Color:"));
-        add(tfColor);
-        add(new JLabel("Material:"));
-        add(tfMaterial);
-        add(new JLabel("Pattern:"));
-        add(tfPattern);
-        add(new JLabel("Special Request:"));
-        add(tfSpecial);
-        add(new JLabel("Barcode:"));
-        add(tfBarcode);
-        add(new JLabel());
-        add(btnAdd);
+        // Helper to add label + field with spacing
+        form.add(row("Order:", cbOrder));
+        form.add(row("Type:", tfType));
+        form.add(row("Brand:", tfBrand));
+        form.add(row("Color:", tfColor));
+        form.add(row("Material:", tfMaterial));
+        form.add(row("Pattern:", tfPattern));
+        form.add(row("Special Request:", tfSpecial));
+        form.add(row("Barcode:", tfBarcode));
+
+        // Add button centered
+        JPanel btnPanel = new JPanel();
+        btnPanel.add(btnAdd);
+        btnPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+        form.add(btnPanel);
+
+        add(form);
 
         btnAdd.addActionListener(e -> {
             Item item = new Item(
@@ -82,8 +84,7 @@ public class AddItemDialog extends JDialog {
                     tfBarcode.getText()
             );
 
-            boolean success = service.addItem(item);
-            if (success) {
+            if (service.addItem(item)) {
                 JOptionPane.showMessageDialog(this, "Item added successfully!");
                 dispose();
             } else {
@@ -92,6 +93,15 @@ public class AddItemDialog extends JDialog {
         });
     }
 
+    // Helper method
+    private JPanel row(String label, JComponent field) {
+        JPanel p = new JPanel(new BorderLayout(5, 5));
+        p.add(new JLabel(label), BorderLayout.WEST);
+        p.add(field, BorderLayout.CENTER);
+        p.setBorder(BorderFactory.createEmptyBorder(0, 0, 12, 0));
+        p.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+        return p;
+    }
     protected void setItemData(Item item) {
         // Set fields for edit
         tfType.setText(item.getType());
