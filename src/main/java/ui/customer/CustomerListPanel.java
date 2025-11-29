@@ -16,17 +16,17 @@ public class CustomerListPanel extends JPanel {
     private JFrame parent;
     private JTextField tfSearch;
 
-    public CustomerListPanel() {
+    public CustomerListPanel(JFrame parent) {
         this.parent = parent;
-        this.service = service;
 
         setLayout(new BorderLayout());
 
-        // Top panel for buttons + search
-        JPanel topPanel = new JPanel();
-        JButton btnAdd = new JButton("Add Customer");
-        JButton btnEdit = new JButton("Edit Customer");
-        JButton btnDelete = new JButton("Delete Customer");
+        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
+        topPanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+
+        JButton btnAdd = new JButton("Add");
+        JButton btnEdit = new JButton("Edit");
+        JButton btnDelete = new JButton("Delete");
         tfSearch = new JTextField(20);
         JButton btnSearch = new JButton("Search");
 
@@ -35,18 +35,25 @@ public class CustomerListPanel extends JPanel {
         topPanel.add(btnDelete);
         topPanel.add(tfSearch);
         topPanel.add(btnSearch);
+
         add(topPanel, BorderLayout.NORTH);
 
-        // Table
         String[] columns = {"Customer ID", "First Name", "Last Name", "Phone", "Email", "Address", "Payment Info"};
-        model = new DefaultTableModel(columns, 0);
+        model = new DefaultTableModel(columns, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) { return false; }
+        };
+
         table = new JTable(model);
         table.setFillsViewportHeight(true);
-        add(new JScrollPane(table), BorderLayout.CENTER);
+
+        JScrollPane scroll = new JScrollPane(table);
+        scroll.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        add(scroll, BorderLayout.CENTER);
 
         loadData();
 
-        // Button actions
         btnAdd.addActionListener(e -> {
             AddCustomerDialog dialog = new AddCustomerDialog(parent, "Add Customer");
             dialog.setVisible(true);
@@ -56,6 +63,12 @@ public class CustomerListPanel extends JPanel {
         btnEdit.addActionListener(e -> editCustomer());
         btnDelete.addActionListener(e -> deleteCustomer());
         btnSearch.addActionListener(e -> searchCustomer());
+
+        table.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                if (evt.getClickCount() == 2) editCustomer();
+            }
+        });
     }
 
     private void loadData() {
@@ -79,9 +92,11 @@ public class CustomerListPanel extends JPanel {
         if (row >= 0) {
             int id = (int) table.getValueAt(row, 0);
             Customer c = service.getCustomerById(id);
-            AddCustomerDialog dialog = new EditCustomerDialog(parent, c);
+
+            EditCustomerDialog dialog = new EditCustomerDialog(parent, c);
             dialog.setCustomerData(c);
             dialog.setVisible(true);
+
             loadData();
         } else {
             JOptionPane.showMessageDialog(parent, "Select a customer to edit.");
@@ -105,12 +120,14 @@ public class CustomerListPanel extends JPanel {
     private void searchCustomer() {
         String keyword = tfSearch.getText().trim().toLowerCase();
         model.setRowCount(0);
+
         List<Customer> customers = service.getAllCustomers();
         for (Customer c : customers) {
             if (c.getFirstName().toLowerCase().contains(keyword) ||
                     c.getLastName().toLowerCase().contains(keyword) ||
                     c.getEmail().toLowerCase().contains(keyword) ||
                     c.getPhone().toLowerCase().contains(keyword)) {
+
                 model.addRow(new Object[]{
                         c.getCustomerId(),
                         c.getFirstName(),

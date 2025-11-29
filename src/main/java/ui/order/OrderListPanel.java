@@ -20,6 +20,8 @@ public class OrderListPanel extends JPanel {
     private OrderService orderService;
     private CustomerService customerService;
 
+    private List<Order> orderList;   // mirror vanList pattern
+
     public OrderListPanel() {
         orderService = new OrderService();
         customerService = new CustomerService();
@@ -32,7 +34,8 @@ public class OrderListPanel extends JPanel {
 
         setLayout(new BorderLayout());
 
-        JPanel top = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        // Top button bar
+        JPanel top = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
         btnAdd = new JButton("Add Order");
         btnEdit = new JButton("Edit");
         btnDelete = new JButton("Delete");
@@ -48,24 +51,37 @@ public class OrderListPanel extends JPanel {
         tableModel = new DefaultTableModel(
                 new Object[]{"Order ID", "Customer", "Order Date", "Due Date", "Pieces", "Status", "Amount"},
                 0
-        );
+        ) {
+            @Override
+            public boolean isCellEditable(int row, int column) { return false; }
+        };
 
         table = new JTable(tableModel);
-        add(new JScrollPane(table), BorderLayout.CENTER);
+        table.setFillsViewportHeight(true);
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        JScrollPane scroll = new JScrollPane(table);
+        add(scroll, BorderLayout.CENTER);
+
 
         table.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
-                if (e.getClickCount() == 2) editSelected();
+                if (e.getClickCount() == 2) {
+                    editOrder();
+                }
             }
         });
 
+
         btnAdd.addActionListener(e -> {
-            OrderAddPanel dlg = new OrderAddPanel((JFrame) SwingUtilities.getWindowAncestor(this));
+            JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(this);
+            OrderAddPanel dlg = new OrderAddPanel(parent);
             dlg.setVisible(true);
             loadOrders();
         });
 
-        btnEdit.addActionListener(e -> editSelected());
+        btnEdit.addActionListener(e -> editOrder());
         btnDelete.addActionListener(e -> deleteSelected());
         btnRefresh.addActionListener(e -> loadOrders());
     }
@@ -73,9 +89,9 @@ public class OrderListPanel extends JPanel {
     private void loadOrders() {
         tableModel.setRowCount(0);
 
-        List<Order> list = orderService.getAllOrders();
+        orderList = orderService.getAllOrders();
 
-        for (Order o : list) {
+        for (Order o : orderList) {
             Customer cust = customerService.getCustomerById(o.getCustomerId());
 
             tableModel.addRow(new Object[]{
@@ -90,17 +106,17 @@ public class OrderListPanel extends JPanel {
         }
     }
 
-    private void editSelected() {
+    private void editOrder() {
         int row = table.getSelectedRow();
-        if (row == -1) {
-            JOptionPane.showMessageDialog(this, "Select an order first!");
+        if (row < 0) {
+            JOptionPane.showMessageDialog(this, "Select an order to edit.");
             return;
         }
 
-        int id = (int) tableModel.getValueAt(row, 0);
-        Order order = orderService.getOrderById(id);
+        Order order = orderList.get(row);
 
-        OrderEditPanel dlg = new OrderEditPanel((JFrame) SwingUtilities.getWindowAncestor(this), order);
+        JFrame parent = (JFrame) SwingUtilities.getWindowAncestor(this);
+        OrderEditPanel dlg = new OrderEditPanel(parent, order);
         dlg.setVisible(true);
         loadOrders();
     }
@@ -108,12 +124,13 @@ public class OrderListPanel extends JPanel {
     private void deleteSelected() {
         int row = table.getSelectedRow();
 
-        if (row == -1) {
+        if (row < 0) {
             JOptionPane.showMessageDialog(this, "Select an order!");
             return;
         }
 
-        int id = (int) tableModel.getValueAt(row, 0);
+        Order order = orderList.get(row);
+        int id = order.getOrderId();
 
         int confirm = JOptionPane.showConfirmDialog(
                 this,

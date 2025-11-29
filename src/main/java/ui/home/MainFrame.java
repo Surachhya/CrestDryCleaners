@@ -113,14 +113,13 @@ public class MainFrame extends JFrame implements ActionListener {
     // -------------------------
     private void showCustomers() {
         contentPanel.removeAll();
-        contentPanel.add(new CustomerListPanel(), BorderLayout.CENTER);
+        contentPanel.add(new CustomerListPanel(this), BorderLayout.CENTER);
         refreshContent();
     }
 
     private void showEmployees() {
         contentPanel.removeAll();
-        contentPanel.add(new EmployeeListPanel(), BorderLayout.CENTER);
-        contentPanel.add(new EmployeeListPanel(), BorderLayout.CENTER);
+        contentPanel.add(new EmployeeListPanel(this), BorderLayout.CENTER);
         refreshContent();
     }
 

@@ -21,12 +21,12 @@ public class AddCustomerDialog extends JDialog {
 
     public AddCustomerDialog(JFrame parent, String title) {
         super(parent, title, true);
-
+        setSize(400, 300);
         service = new CustomerService();
 
-        setSize(400, 400);
-        setLocationRelativeTo(parent);
-        setLayout(new GridLayout(8, 2, 5, 5));
+        JPanel form = new JPanel();
+        form.setLayout(new BoxLayout(form, BoxLayout.Y_AXIS));
+        form.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         tfFName = new JTextField();
         tfLName = new JTextField();
@@ -37,23 +37,22 @@ public class AddCustomerDialog extends JDialog {
 
         btnAdd = new JButton("Add");
 
-        add(new JLabel("First Name:"));
-        add(tfFName);
-        add(new JLabel("Last Name:"));
-        add(tfLName);
-        add(new JLabel("Phone:"));
-        add(tfPhone);
-        add(new JLabel("Email:"));
-        add(tfEmail);
-        add(new JLabel("Address:"));
-        add(tfAddress);
-        add(new JLabel("Payment Info:"));
-        add(tfPayment);
+        form.add(row("First Name:", tfFName));
+        form.add(row("Last Name:", tfLName));
+        form.add(row("Phone:", tfPhone));
+        form.add(row("Email:", tfEmail));
+        form.add(row("Address:", tfAddress));
+        form.add(row("Payment Info:", tfPayment));
 
-        add(new JLabel()); // empty cell
-        add(btnAdd);
+        JPanel btnPanel = new JPanel();
+        btnPanel.add(btnAdd);
+        btnPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
+        form.add(btnPanel);
 
-        // Default Add action
+        add(form);
+
+        setLocationRelativeTo(parent);
+
         btnAdd.addActionListener(e -> {
             Customer customer = new Customer(
                     0,
@@ -64,6 +63,7 @@ public class AddCustomerDialog extends JDialog {
                     tfAddress.getText(),
                     tfPayment.getText()
             );
+
             boolean success = service.addCustomer(customer);
             if (success) {
                 JOptionPane.showMessageDialog(this, "Customer added!");
@@ -74,6 +74,15 @@ public class AddCustomerDialog extends JDialog {
         });
     }
 
+    private JPanel row(String label, JComponent field) {
+        JPanel p = new JPanel(new BorderLayout(5, 5));
+        p.add(new JLabel(label), BorderLayout.WEST);
+        p.add(field, BorderLayout.CENTER);
+
+        p.setBorder(BorderFactory.createEmptyBorder(0, 0, 12, 0));
+        p.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+        return p;
+    }
     protected void setCustomerData(Customer customer) {
         tfFName.setText(customer.getFirstName());
         tfLName.setText(customer.getLastName());

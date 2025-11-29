@@ -25,7 +25,9 @@ public class AddVanDialog extends JDialog {
         super(parent, title, true);
         setSize(400, 300);
         setLocationRelativeTo(parent);
-        setLayout(new GridLayout(6, 2, 5, 5));
+
+        JPanel form = new JPanel(new GridLayout(6, 2, 10, 10));
+        form.setBorder(BorderFactory.createEmptyBorder(15, 20, 15, 20));
 
         cbStore = new JComboBox<>();
         tfPlate = new JTextField();
@@ -34,20 +36,22 @@ public class AddVanDialog extends JDialog {
         tfCapacity = new JTextField();
         btnAdd = new JButton("Add");
 
-        add(new JLabel("Store:"));
-        add(cbStore);
-        add(new JLabel("Plate Number:"));
-        add(tfPlate);
-        add(new JLabel("Model:"));
-        add(tfModel);
-        add(new JLabel("Year:"));
-        add(tfYear);
-        add(new JLabel("Capacity:"));
-        add(tfCapacity);
-        add(new JLabel());
-        add(btnAdd);
+        form.add(new JLabel("Store:"));
+        form.add(cbStore);
+        form.add(new JLabel("Plate Number:"));
+        form.add(tfPlate);
+        form.add(new JLabel("Model:"));
+        form.add(tfModel);
+        form.add(new JLabel("Year:"));
+        form.add(tfYear);
+        form.add(new JLabel("Capacity:"));
+        form.add(tfCapacity);
+        form.add(new JLabel());
+        form.add(btnAdd);
 
-        // Load stores
+        add(form);
+
+    // Load stores
         List<Store> stores = storeService.getAllStores();
         for (Store s : stores) cbStore.addItem(s);
 
