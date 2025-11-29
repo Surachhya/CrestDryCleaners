@@ -6,6 +6,8 @@ import ui.employee.EmployeeListPanel;
 import ui.item.ItemListPanel;
 import ui.order.OrderAddPanel;
 import ui.order.OrderListPanel;
+import ui.reports.ReportsPage;
+import ui.settings.SettingsPage;
 import ui.store.StoreListPanel;
 import ui.van.VanListPanel;
 
@@ -16,15 +18,15 @@ import java.awt.event.ActionListener;
 
 public class MainFrame extends JFrame implements ActionListener {
 
-    private JPanel mainContainer;   // CardLayout container
+    private JPanel mainContainer;
     private CardLayout cardLayout;
 
     private StartupPanel startupPanel;
-    private JPanel managePanel;     // Existing menu + content layout
+    private JPanel managePanel;
     private JPanel contentPanel;
     private MenuPanel menuPanel;
 
-    private OrderAddPanel orderAddPanel; // Direct order add panel
+    private OrderAddPanel orderAddPanel;
 
     public MainFrame() {
         setTitle("Crest Dry Cleaners");
@@ -32,29 +34,19 @@ public class MainFrame extends JFrame implements ActionListener {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null); // center window
 
-        // -------------------------
-        // CardLayout container
-        // -------------------------
         cardLayout = new CardLayout();
         mainContainer = new JPanel(cardLayout);
 
-        // -------------------------
-        // Startup Panel
-        // -------------------------
         startupPanel = new StartupPanel(this);
+        mainContainer.add(new ReportsPage(), "ReportsPage");
 
-        // -------------------------
-        // Manage Orders Panel
-        // -------------------------
         managePanel = new JPanel(new BorderLayout());
 
         menuPanel = new MenuPanel();
         contentPanel = new JPanel(new BorderLayout());
 
-        // -------------------------
-        // Home Button at top
-        // -------------------------
         TopBarPanel topBar = new TopBarPanel(cardLayout, mainContainer);
+        mainContainer.add(new SettingsPage(topBar), "SettingsPage");
         add(topBar, BorderLayout.NORTH);
 
         // Wrap content panel with top panel
@@ -66,9 +58,6 @@ public class MainFrame extends JFrame implements ActionListener {
         managePanel.add(menuPanel, BorderLayout.WEST);
         managePanel.add(contentWrapper, BorderLayout.CENTER);
 
-        // -------------------------
-        // Menu button actions
-        // -------------------------
         menuPanel.btnCustomers.addActionListener(e -> showCustomers());
         menuPanel.btnEmployees.addActionListener(e -> showEmployees());
         menuPanel.btnStores.addActionListener(e -> showStores());
@@ -77,14 +66,10 @@ public class MainFrame extends JFrame implements ActionListener {
         menuPanel.btnVans.addActionListener(e -> showVans());
         menuPanel.btnItems.addActionListener(e -> showItems());
 
-        // -------------------------
-        // Start Order Panel
-        // -------------------------
+
         orderAddPanel = new OrderAddPanel(this);
 
-        // -------------------------
-        // Add panels to CardLayout
-        // -------------------------
+
         mainContainer.add(startupPanel, "Startup");
         mainContainer.add(managePanel, "ManageOrders");
 
@@ -108,9 +93,6 @@ public class MainFrame extends JFrame implements ActionListener {
         }
     }
 
-    // -------------------------
-    // MenuPanel show methods
-    // -------------------------
     private void showCustomers() {
         contentPanel.removeAll();
         contentPanel.add(new CustomerListPanel(this), BorderLayout.CENTER);

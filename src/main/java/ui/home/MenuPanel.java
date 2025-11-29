@@ -35,9 +35,6 @@ public class MenuPanel extends JPanel {
         add(btnItems);
     }
 
-    // -------------------------
-    // Helper: styled button
-    // -------------------------
     private JButton createButton(String text) {
         JButton btn = new JButton(text);
         btn.setFont(new Font("Arial", Font.BOLD, 16));
