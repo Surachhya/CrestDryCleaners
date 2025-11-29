@@ -57,11 +57,6 @@ public class MainFrame extends JFrame implements ActionListener {
         TopBarPanel topBar = new TopBarPanel(cardLayout, mainContainer);
         add(topBar, BorderLayout.NORTH);
 
-//        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-//        JButton btnHome = new JButton("Home");
-//        btnHome.addActionListener(e -> cardLayout.show(mainContainer, "Startup"));
-//        topPanel.add(btnHome);
-
         // Wrap content panel with top panel
         JPanel contentWrapper = new JPanel(new BorderLayout());
         //contentWrapper.add(topPanel, BorderLayout.NORTH);
