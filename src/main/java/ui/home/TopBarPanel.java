@@ -15,7 +15,7 @@ public class TopBarPanel extends JPanel {
 
     public TopBarPanel(CardLayout cardLayout, JPanel mainContainer) {
 
-        prefs = Preferences.userNodeForPackage(TopBarPanel.class);
+        prefs = Preferences.userNodeForPackage(MainFrame.class);
         String username = prefs.get("username", "Admin");
 
         setLayout(new GridBagLayout());
@@ -37,7 +37,7 @@ public class TopBarPanel extends JPanel {
         lblCompany.setFont(new Font("Arial", Font.BOLD, 16));
         lblCompany.setForeground(new Color(50, 50, 50));
 
-        JLabel lblTagline = new JLabel("Retail Management System");
+        JLabel lblTagline = new JLabel("Complete Cleaning Service");
         lblTagline.setFont(new Font("Arial", Font.PLAIN, 12));
         lblTagline.setForeground(new Color(90, 90, 90));
 
@@ -62,19 +62,11 @@ public class TopBarPanel extends JPanel {
         centerPanel.add(btnHome);
 
         btnReports = createButton("Reports");
-        btnReports.addActionListener(e -> JOptionPane.showMessageDialog(this, "Reports coming soon!"));
+        btnReports.addActionListener(e -> cardLayout.show(mainContainer, "ReportsPage"));
         centerPanel.add(btnReports);
 
         btnSettings = createButton("Settings");
-        btnSettings.addActionListener(e -> {
-            String currentName = prefs.get("username", "Admin");
-            String newName = JOptionPane.showInputDialog(this, "Update profile name:", currentName);
-
-            if (newName != null && !newName.trim().isEmpty()) {
-                prefs.put("username", newName.trim());
-                lblUser.setText("Hello " + newName.trim() + " !");
-            }
-        });
+        btnSettings.addActionListener(e -> cardLayout.show(mainContainer, "SettingsPage"));
         centerPanel.add(btnSettings);
 
         gbc.gridx = 1;
@@ -93,6 +85,14 @@ public class TopBarPanel extends JPanel {
         gbc.gridx = 2;
         gbc.weightx = 0.20;
         add(rightPanel, gbc);
+    }
+
+    public void refreshUsername() {
+        String username = prefs.get("username", "Admin");
+        System.out.println("TopBarPanel.refreshUsername called, username = " + username);
+        lblUser.setText("Hello " + username + " !");
+        revalidate();
+        repaint();
     }
 
     @Override
