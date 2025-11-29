@@ -35,20 +35,6 @@ public void setCompanyName(String companyName) {this.companyName = companyName;}
 public void setContactPerson(String contactPerson) {this.contactPerson = contactPerson;}
 public void setDiscountRate(double discountRate) {this.discountRate = discountRate;}
 public void setCustomerId(int customerId) {this.customerId = customerId;}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
 
 
